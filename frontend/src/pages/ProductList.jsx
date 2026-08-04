@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 
-function ProductList() {
+function ProductList({ refresh }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [refresh]);
 
   const fetchProducts = async () => {
     try {
       const response = await API.get("/products");
 
-console.log("Products from API:", response.data);
-
-setProducts(response.data);
+      setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }

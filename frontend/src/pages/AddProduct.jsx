@@ -1,8 +1,8 @@
 import { useState } from "react";
 import API from "../services/api";
 
-function AddProduct() {
-  const [formData, setFormData] = useState({
+function AddProduct({ onProductAdded }) {
+  const [product, setProduct] = useState({
     name: "",
     sku: "",
     category: "",
@@ -11,8 +11,8 @@ function AddProduct() {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setProduct({
+      ...product,
       [e.target.name]: e.target.value,
     });
   };
@@ -22,14 +22,16 @@ function AddProduct() {
 
     try {
       await API.post("/products", {
-        ...formData,
-        quantity: Number(formData.quantity),
-        price: Number(formData.price),
+        ...product,
+        quantity: Number(product.quantity),
+        price: Number(product.price),
       });
 
-      alert("Product added!");
+      // Refresh product list
+      onProductAdded();
 
-      setFormData({
+      // Clear form
+      setProduct({
         name: "",
         sku: "",
         category: "",
@@ -37,8 +39,7 @@ function AddProduct() {
         price: "",
       });
     } catch (error) {
-      console.error(error);
-      alert("Error adding product.");
+      console.error("Error adding product:", error);
     }
   };
 
@@ -51,7 +52,7 @@ function AddProduct() {
           type="text"
           name="name"
           placeholder="Product Name"
-          value={formData.name}
+          value={product.name}
           onChange={handleChange}
           required
         />
@@ -60,7 +61,7 @@ function AddProduct() {
           type="text"
           name="sku"
           placeholder="SKU"
-          value={formData.sku}
+          value={product.sku}
           onChange={handleChange}
           required
         />
@@ -69,7 +70,7 @@ function AddProduct() {
           type="text"
           name="category"
           placeholder="Category"
-          value={formData.category}
+          value={product.category}
           onChange={handleChange}
           required
         />
@@ -78,22 +79,23 @@ function AddProduct() {
           type="number"
           name="quantity"
           placeholder="Quantity"
-          value={formData.quantity}
+          value={product.quantity}
           onChange={handleChange}
           required
         />
 
         <input
           type="number"
-          step="0.01"
           name="price"
           placeholder="Price"
-          value={formData.price}
+          value={product.price}
           onChange={handleChange}
           required
         />
 
-        <button type="submit">Add Product</button>
+        <button type="submit">
+          Add Product
+        </button>
       </form>
     </div>
   );
