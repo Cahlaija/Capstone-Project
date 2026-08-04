@@ -1,42 +1,28 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar";
+
+import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
 import ProductList from "./pages/ProductList";
 import EditProduct from "./pages/EditProduct";
 
-function Home({ refresh, handleProductAdded }) {
-  return (
-    <div>
-      <h1>Inventory Manager</h1>
-
-      <AddProduct onProductAdded={handleProductAdded} />
-
-      <hr />
-
-      <ProductList refresh={refresh} />
-    </div>
-  );
-}
-
 function App() {
-  const [refresh, setRefresh] = useState(false);
-
-  const handleProductAdded = () => {
-    setRefresh(!refresh);
-  };
-
   return (
-    <BrowserRouter>
+    <>
+      <Navbar />
+
       <Routes>
+        <Route path="/" element={<Home />} />
+
         <Route
-          path="/"
-          element={
-            <Home
-              refresh={refresh}
-              handleProductAdded={handleProductAdded}
-            />
-          }
+          path="/products"
+          element={<ProductList />}
+        />
+
+        <Route
+          path="/add"
+          element={<AddProduct onProductAdded={() => {}} />}
         />
 
         <Route
@@ -44,7 +30,7 @@ function App() {
           element={<EditProduct />}
         />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
