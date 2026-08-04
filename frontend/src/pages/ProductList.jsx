@@ -65,9 +65,19 @@ function ProductList({ refresh }) {
             {filteredProducts.map((product) => (
               <tr key={product._id}>
                 <td>{product.name}</td>
+
                 <td>{product.sku}</td>
+
                 <td>{product.category}</td>
-                <td>{product.quantity}</td>
+
+                <td>
+                  {product.quantity}
+
+                  {product.quantity <= 5 && (
+                    <span> ⚠️ Low Stock</span>
+                  )}
+                </td>
+
                 <td>${product.price}</td>
 
                 <td>

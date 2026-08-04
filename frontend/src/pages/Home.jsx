@@ -30,6 +30,10 @@ function Home() {
     0
   );
 
+  const lowStockProducts = products.filter(
+    (product) => product.quantity <= 5
+  ).length;
+
   return (
     <div>
       <h1>Inventory Dashboard</h1>
@@ -40,13 +44,18 @@ function Home() {
       </div>
 
       <div>
-        <h3>Total Items</h3>
+        <h3>Total Items in Stock</h3>
         <p>{totalQuantity}</p>
       </div>
 
       <div>
-        <h3>Inventory Value</h3>
+        <h3>Total Inventory Value</h3>
         <p>${totalValue.toFixed(2)}</p>
+      </div>
+
+      <div>
+        <h3>Low Stock Items</h3>
+        <p>{lowStockProducts}</p>
       </div>
     </div>
   );
