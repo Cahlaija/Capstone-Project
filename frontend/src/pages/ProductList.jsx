@@ -11,10 +11,20 @@ function ProductList({ refresh }) {
   const fetchProducts = async () => {
     try {
       const response = await API.get("/products");
-
       setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await API.delete(`/products/${id}`);
+
+      // Refresh list after delete
+      fetchProducts();
+    } catch (error) {
+      console.error("Error deleting product:", error);
     }
   };
 
@@ -33,6 +43,7 @@ function ProductList({ refresh }) {
               <th>Category</th>
               <th>Quantity</th>
               <th>Price</th>
+              <th>Action</th>
             </tr>
           </thead>
 
@@ -44,6 +55,11 @@ function ProductList({ refresh }) {
                 <td>{product.category}</td>
                 <td>{product.quantity}</td>
                 <td>${product.price}</td>
+                <td>
+                  <button onClick={() => handleDelete(product._id)}>
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
