@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
@@ -27,35 +28,11 @@ function App() {
 
       <Routes>
 
+        {/* Public Routes */}
+
         <Route
           path="/"
           element={<Home />}
-        />
-
-
-        <Route
-          path="/products"
-          element={
-            <ProductList
-              refresh={refresh}
-            />
-          }
-        />
-
-
-        <Route
-          path="/add"
-          element={
-            <AddProduct
-              onProductAdded={handleProductAdded}
-            />
-          }
-        />
-
-
-        <Route
-          path="/edit/:id"
-          element={<EditProduct />}
         />
 
 
@@ -68,6 +45,42 @@ function App() {
         <Route
           path="/register"
           element={<Register />}
+        />
+
+
+        {/* Protected Routes */}
+
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <ProductList
+                refresh={refresh}
+              />
+            </ProtectedRoute>
+          }
+        />
+
+
+        <Route
+          path="/add"
+          element={
+            <ProtectedRoute>
+              <AddProduct
+                onProductAdded={handleProductAdded}
+              />
+            </ProtectedRoute>
+          }
+        />
+
+
+        <Route
+          path="/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditProduct />
+            </ProtectedRoute>
+          }
         />
 
 
