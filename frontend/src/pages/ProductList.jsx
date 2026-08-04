@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import API from "../services/api";
 
 function ProductList({ refresh }) {
@@ -55,8 +56,17 @@ function ProductList({ refresh }) {
                 <td>{product.category}</td>
                 <td>{product.quantity}</td>
                 <td>${product.price}</td>
+
                 <td>
-                  <button onClick={() => handleDelete(product._id)}>
+                  <Link to={`/edit/${product._id}`}>
+                    <button>
+                      Edit
+                    </button>
+                  </Link>
+
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                  >
                     Delete
                   </button>
                 </td>
