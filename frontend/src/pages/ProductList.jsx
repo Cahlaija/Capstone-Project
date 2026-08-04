@@ -4,6 +4,7 @@ import API from "../services/api";
 
 function ProductList({ refresh }) {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -22,18 +23,30 @@ function ProductList({ refresh }) {
     try {
       await API.delete(`/products/${id}`);
 
-      // Refresh list after delete
       fetchProducts();
     } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase()) ||
+    product.sku.toLowerCase().includes(search.toLowerCase()) ||
+    product.category.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div>
       <h2>Inventory Products</h2>
 
-      {products.length === 0 ? (
+      <input
+        type="text"
+        placeholder="Search by name, SKU, or category..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      {filteredProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
         <table border="1" cellPadding="8">
@@ -49,7 +62,7 @@ function ProductList({ refresh }) {
           </thead>
 
           <tbody>
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product._id}>
                 <td>{product.name}</td>
                 <td>{product.sku}</td>
