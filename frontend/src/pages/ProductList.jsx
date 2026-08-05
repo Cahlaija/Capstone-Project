@@ -6,6 +6,7 @@ function ProductList({ refresh }) {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("");
 
   useEffect(() => {
     fetchProducts();
@@ -35,11 +36,13 @@ function ProductList({ refresh }) {
     }
   };
 
+  // Categories for dropdown
   const categories = [
     "All",
     ...new Set(products.map((product) => product.category)),
   ];
 
+  // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -51,6 +54,36 @@ function ProductList({ refresh }) {
     return matchesSearch && matchesCategory;
   });
 
+  // Sort products
+  const sortedProducts = [...filteredProducts];
+
+  switch (sortBy) {
+    case "name":
+      sortedProducts.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      break;
+
+    case "priceLow":
+      sortedProducts.sort((a, b) => a.price - b.price);
+      break;
+
+    case "priceHigh":
+      sortedProducts.sort((a, b) => b.price - a.price);
+      break;
+
+    case "quantityLow":
+      sortedProducts.sort((a, b) => a.quantity - b.quantity);
+      break;
+
+    case "quantityHigh":
+      sortedProducts.sort((a, b) => b.quantity - a.quantity);
+      break;
+
+    default:
+      break;
+  }
+
   return (
     <div>
       <h2>Inventory Products</h2>
@@ -61,6 +94,7 @@ function ProductList({ refresh }) {
           gap: "15px",
           marginBottom: "20px",
           alignItems: "center",
+          flexWrap: "wrap",
         }}
       >
         <input
@@ -77,9 +111,7 @@ function ProductList({ refresh }) {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          style={{
-            padding: "8px",
-          }}
+          style={{ padding: "8px" }}
         >
           {categories.map((cat) => (
             <option
@@ -90,9 +122,22 @@ function ProductList({ refresh }) {
             </option>
           ))}
         </select>
+
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{ padding: "8px" }}
+        >
+          <option value="">Sort By</option>
+          <option value="name">Name (A–Z)</option>
+          <option value="priceLow">Price (Low → High)</option>
+          <option value="priceHigh">Price (High → Low)</option>
+          <option value="quantityLow">Quantity (Low → High)</option>
+          <option value="quantityHigh">Quantity (High → Low)</option>
+        </select>
       </div>
 
-      {filteredProducts.length === 0 ? (
+      {sortedProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
         <table border="1" cellPadding="10">
@@ -108,13 +153,13 @@ function ProductList({ refresh }) {
           </thead>
 
           <tbody>
-            {filteredProducts.map((product) => (
+            {sortedProducts.map((product) => (
               <tr key={product._id}>
                 <td>{product.name}</td>
                 <td>{product.sku}</td>
                 <td>{product.category}</td>
                 <td>{product.quantity}</td>
-                <td>${product.price}</td>
+                <td>${Number(product.price).toFixed(2)}</td>
 
                 <td>
                   <Link to={`/edit/${product._id}`}>
