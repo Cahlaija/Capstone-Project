@@ -1,16 +1,56 @@
-# React + Vite
+# Inventory Manager
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack MERN Inventory Management application that allows users to create accounts, securely log in, and manage product inventory.
 
-Currently, two official plugins are available:
+Users can add, view, edit, delete, search, filter, and sort products through a responsive React interface connected to an Express and MongoDB backend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Authentication
+- User registration
+- User login
+- JWT authentication
+- Protected routes
+- Logout functionality
+- Persistent user sessions
 
-## Expanding the ESLint configuration
+### Inventory Management
+- Add products
+- View all products
+- Edit products
+- Delete products
+- Search products by name or SKU
+- Filter products by category
+- Sort products by name, price, and quantity
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### User Experience
+- Responsive design
+- Loading indicators
+- Error messages
+- Form validation
+- Custom 404 page
+
+---
+
+## Technologies Used
+
+### Frontend
+- React
+- React Router
+- Axios
+- JavaScript
+- CSS
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- JWT Authentication
+- bcrypt
+
+---
+
+## Project Structure
