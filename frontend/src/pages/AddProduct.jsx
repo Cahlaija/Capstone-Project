@@ -10,6 +10,11 @@ function AddProduct({ onProductAdded }) {
     price: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+
   const handleChange = (e) => {
     setProduct({
       ...product,
@@ -17,8 +22,13 @@ function AddProduct({ onProductAdded }) {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
+    setMessage("");
+    setError("");
 
     try {
       await API.post("/products", {
@@ -27,10 +37,10 @@ function AddProduct({ onProductAdded }) {
         price: Number(product.price),
       });
 
-      // Refresh product list
+      setMessage("Product added successfully!");
+
       onProductAdded();
 
-      // Clear form
       setProduct({
         name: "",
         sku: "",
@@ -38,65 +48,98 @@ function AddProduct({ onProductAdded }) {
         quantity: "",
         price: "",
       });
+
     } catch (error) {
-      console.error("Error adding product:", error);
+      setError(
+        error.response?.data?.message ||
+        "Failed to add product."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+
   return (
-    <div>
+    <div
+      style={{
+        maxWidth: "500px",
+        margin: "40px auto",
+        background: "white",
+        padding: "30px",
+        borderRadius: "10px",
+        boxShadow: "0 4px 10px rgba(0,0,0,.1)"
+      }}
+    >
+
       <h2>Add Product</h2>
 
+      {message && (
+        <p style={{color:"green"}}>
+          {message}
+        </p>
+      )}
+
+      {error && (
+        <p style={{color:"red"}}>
+          {error}
+        </p>
+      )}
+
+
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Product Name"
-          value={product.name}
-          onChange={handleChange}
-          required
-        />
 
-        <input
-          type="text"
-          name="sku"
-          placeholder="SKU"
-          value={product.sku}
-          onChange={handleChange}
-          required
-        />
+        {[
+          ["name","Product Name"],
+          ["sku","SKU"],
+          ["category","Category"],
+          ["quantity","Quantity"],
+          ["price","Price"]
+        ].map(([name, placeholder]) => (
 
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={product.category}
-          onChange={handleChange}
-          required
-        />
+          <input
+            key={name}
+            type={
+              name === "quantity" || name === "price"
+              ? "number"
+              : "text"
+            }
+            name={name}
+            placeholder={placeholder}
+            value={product[name]}
+            onChange={handleChange}
+            required
+            style={{
+              width:"100%",
+              padding:"10px",
+              marginBottom:"15px",
+              borderRadius:"6px",
+              border:"1px solid #ccc",
+              boxSizing:"border-box"
+            }}
+          />
 
-        <input
-          type="number"
-          name="quantity"
-          placeholder="Quantity"
-          value={product.quantity}
-          onChange={handleChange}
-          required
-        />
+        ))}
 
-        <input
-          type="number"
-          name="price"
-          placeholder="Price"
-          value={product.price}
-          onChange={handleChange}
-          required
-        />
 
-        <button type="submit">
-          Add Product
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width:"100%",
+            padding:"12px",
+            borderRadius:"6px",
+            border:"none",
+            background:"#2563eb",
+            color:"white",
+            cursor:"pointer"
+          }}
+        >
+          {loading ? "Adding..." : "Add Product"}
         </button>
+
       </form>
+
     </div>
   );
 }
