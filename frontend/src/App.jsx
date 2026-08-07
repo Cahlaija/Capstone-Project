@@ -13,61 +13,94 @@ import NotFound from "./pages/NotFound";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
 function App() {
+
   const [refresh, setRefresh] = useState(false);
+
 
   const handleProductAdded = () => {
     setRefresh((prev) => !prev);
   };
 
+
   return (
-    <div
-      style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "20px",
-      }}
-    >
+
+    <>
+
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
 
-        <Route path="/login" element={<Login />} />
+      <main className="container py-4">
 
-        <Route path="/register" element={<Register />} />
+        <Routes>
 
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute>
-              <ProductList refresh={refresh} />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route
-          path="/add"
-          element={
-            <ProtectedRoute>
-              <AddProduct onProductAdded={handleProductAdded} />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/"
+            element={<Home />}
+          />
 
-        <Route
-          path="/edit/:id"
-          element={
-            <ProtectedRoute>
-              <EditProduct />
-            </ProtectedRoute>
-          }
-        />
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+          <Route
+            path="/login"
+            element={<Login />}
+          />
+
+
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
+
+          <Route
+            path="/products"
+            element={
+              <ProtectedRoute>
+                <ProductList refresh={refresh} />
+              </ProtectedRoute>
+            }
+          />
+
+
+          <Route
+            path="/add"
+            element={
+              <ProtectedRoute>
+                <AddProduct
+                  onProductAdded={handleProductAdded}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+
+          <Route
+            path="/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditProduct />
+              </ProtectedRoute>
+            }
+          />
+
+
+          <Route
+            path="*"
+            element={<NotFound />}
+          />
+
+
+        </Routes>
+
+      </main>
+
+
+    </>
+
   );
 }
+
 
 export default App;

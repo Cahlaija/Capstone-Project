@@ -1,74 +1,138 @@
+/* Global Styles */
+
 body {
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f4f6f9;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background: #f4f7fb;
+  color: #212529;
 }
+
+
+/* Main containers */
 
 .container {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 20px;
+  max-width: 1200px;
 }
 
-nav {
-  background: #1f2937;
-  padding: 15px;
+
+/* Cards */
+
+.card {
+  border: none;
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-right: 15px;
-  font-weight: bold;
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 
-nav a:hover {
-  color: #60a5fa;
+
+/* Buttons */
+
+.btn {
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
+
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+
+
+/* Navbar */
+
+.navbar {
+  padding: 15px 0;
+}
+
+
+.navbar-brand {
+  font-size: 1.4rem;
+}
+
+
+
+/* Tables */
+
+.table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+
+.table tbody tr {
+  transition: background 0.2s ease;
+}
+
+
+.table tbody tr:hover {
+  background-color: #f1f5ff;
+}
+
+
+
+/* Forms */
+
+.form-control {
+
+  border-radius: 10px;
+  padding: 12px;
+
+}
+
+
+.form-control:focus {
+
+  box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+
+}
+
+
+
+/* Headings */
 
 h1,
-h2 {
-  color: #1f2937;
+h2,
+h3 {
+
+  font-weight: 700;
+
 }
 
-input,
-select {
-  padding: 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+
+
+/* Dashboard cards */
+
+.display-4 {
+
+  font-weight: 800;
+
 }
 
-button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 6px;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
-}
 
-button:hover {
-  background: #1d4ed8;
-}
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
+/* Mobile adjustments */
 
-th {
-  background: #2563eb;
-  color: white;
-}
+@media(max-width:768px){
 
-th,
-td {
-  padding: 12px;
-  border: 1px solid #ddd;
-}
+  .display-4 {
 
-tr:nth-child(even) {
-  background: #f9fafb;
+    font-size:2rem;
+
+  }
+
+
+  .btn {
+
+    width:100%;
+
+  }
+
 }
