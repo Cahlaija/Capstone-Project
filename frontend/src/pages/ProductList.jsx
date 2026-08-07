@@ -1,11 +1,41 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API from "../services/api";
 
 function ProductList({ refresh }) {
+
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+
+  const fetchProducts = async () => {
+    try {
+
+      setLoading(true);
+
+      const response = await fetch(
+        "http://localhost:5000/products"
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load products");
+      }
+
+      const data = await response.json();
+
+      setProducts(data);
+
+    } catch (err) {
+
+      setError(err.message);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+  };
 
 
   useEffect(() => {
@@ -13,188 +43,307 @@ function ProductList({ refresh }) {
   }, [refresh]);
 
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    setError("");
 
-    try {
-      const response = await API.get("/products");
-      setProducts(response.data);
-
-    } catch (error) {
-      setError(
-        error.response?.data?.message ||
-        "Failed to load products."
-      );
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
-  const handleDelete = async (id) => {
+  const deleteProduct = async (id) => {
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
+      "Delete this product?"
     );
 
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
 
-    try {
+    await fetch(
+      `http://localhost:5000/products/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-      await API.delete(`/products/${id}`);
 
-      fetchProducts();
+    fetchProducts();
 
-    } catch (error) {
-
-      setError(
-        error.response?.data?.message ||
-        "Failed to delete product."
-      );
-
-    }
   };
+
+
+
+  const filteredProducts = products.filter((product) =>
+    product.name
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
 
 
   if (loading) {
+
     return (
-      <p style={{textAlign:"center"}}>
-        Loading products...
-      </p>
+
+      <div className="container mt-5 text-center">
+
+        <div className="spinner-border text-primary"></div>
+
+        <p className="mt-3">
+          Loading inventory...
+        </p>
+
+      </div>
+
     );
+
   }
 
 
+
   return (
-    <div
-      style={{
-        maxWidth:"1100px",
-        margin:"40px auto"
-      }}
-    >
 
-      <h2>
-        Inventory Products
-      </h2>
+    <div className="container mt-4">
 
 
-      {error && (
-        <p
-          style={{
-            color:"red"
-          }}
-        >
-          {error}
-        </p>
-      )}
+      <div className="card shadow-sm">
+
+        <div className="card-body">
 
 
-      {products.length === 0 ? (
-
-        <p>
-          No products found.
-        </p>
-
-      ) : (
-
-        <table
-          style={{
-            width:"100%",
-            background:"white",
-            borderCollapse:"collapse",
-            borderRadius:"10px",
-            overflow:"hidden"
-          }}
-        >
-
-          <thead>
-
-            <tr>
-
-              <th>Name</th>
-              <th>SKU</th>
-              <th>Category</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Actions</th>
-
-            </tr>
-
-          </thead>
+          <div className="d-flex justify-content-between align-items-center mb-4">
 
 
-          <tbody>
+            <div>
 
-          {products.map((product) => (
+              <h2 className="fw-bold">
+                Product Inventory
+              </h2>
 
-            <tr key={product._id}>
+              <p className="text-muted">
+                Total Products: {products.length}
+              </p>
 
-              <td>
-                {product.name}
-              </td>
-
-              <td>
-                {product.sku}
-              </td>
-
-              <td>
-                {product.category}
-              </td>
-
-              <td>
-                {product.quantity}
-              </td>
-
-              <td>
-                ${product.price}
-              </td>
+            </div>
 
 
-              <td>
 
-                <Link to={`/edit/${product._id}`}>
-                  <button
-                    style={{
-                      marginRight:"10px"
-                    }}
-                  >
-                    Edit
-                  </button>
-                </Link>
+            <Link
+              to="/add"
+              className="btn btn-success"
+            >
+              ➕ Add Product
+            </Link>
 
 
-                <button
-                  onClick={() =>
-                    handleDelete(product._id)
-                  }
-                  style={{
-                    background:"#dc2626"
-                  }}
-                >
-                  Delete
-                </button>
+          </div>
 
 
-              </td>
+
+          <input
+
+            className="form-control mb-4"
+
+            placeholder="🔍 Search products..."
+
+            value={search}
+
+            onChange={(e)=>setSearch(e.target.value)}
+
+          />
 
 
-            </tr>
 
-          ))}
+          {error && (
 
-          </tbody>
+            <div className="alert alert-danger">
 
-        </table>
+              {error}
 
-      )}
+            </div>
+
+          )}
+
+
+
+
+          {filteredProducts.length === 0 ? (
+
+            <div className="alert alert-info">
+
+              No products found.
+
+            </div>
+
+          ) : (
+
+
+            <div className="table-responsive">
+
+
+              <table className="table table-hover align-middle">
+
+
+                <thead className="table-dark">
+
+
+                  <tr>
+
+                    <th>
+                      Product
+                    </th>
+
+                    <th>
+                      Category
+                    </th>
+
+                    <th>
+                      Price
+                    </th>
+
+                    <th>
+                      Quantity
+                    </th>
+
+                    <th>
+                      Status
+                    </th>
+
+                    <th>
+                      Actions
+                    </th>
+
+                  </tr>
+
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                {filteredProducts.map((product)=>(
+
+
+                  <tr key={product._id}>
+
+
+                    <td className="fw-semibold">
+
+                      {product.name}
+
+                    </td>
+
+
+                    <td>
+
+                      {product.category}
+
+                    </td>
+
+
+                    <td>
+
+                      ${product.price}
+
+                    </td>
+
+
+
+                    <td>
+
+                      {product.quantity}
+
+                    </td>
+
+
+
+                    <td>
+
+
+                    {product.quantity <= 5 ? (
+
+
+                      <span className="badge bg-danger">
+
+                        Low Stock
+
+                      </span>
+
+
+                    ) : (
+
+
+                      <span className="badge bg-success">
+
+                        Available
+
+                      </span>
+
+
+                    )}
+
+
+                    </td>
+
+
+
+                    <td>
+
+
+                      <Link
+
+                        to={`/edit/${product._id}`}
+
+                        className="btn btn-primary btn-sm me-2"
+
+                      >
+
+                        Edit
+
+                      </Link>
+
+
+
+                      <button
+
+                        className="btn btn-danger btn-sm"
+
+                        onClick={()=>deleteProduct(product._id)}
+
+                      >
+
+                        Delete
+
+                      </button>
+
+
+                    </td>
+
+
+                  </tr>
+
+
+                ))}
+
+
+                </tbody>
+
+
+              </table>
+
+
+            </div>
+
+
+          )}
+
+
+        </div>
+
+      </div>
+
 
     </div>
+
   );
+
 }
+
 
 export default ProductList;
